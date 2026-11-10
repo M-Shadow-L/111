@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>给你的一封信</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #fff3f5;
+      font-family: system-ui, sans-serif;
+    }
+
+    .scene {
+      text-align: center;
+    }
+
+    .hint {
+      margin-bottom: 24px;
+      color: #885e68;
+    }
+
+    .envelope {
+      position: relative;
+      width: 280px;
+      height: 190px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      perspective: 800px;
+    }
+
+    .back,
+    .front,
+    .flap {
+      position: absolute;
+      inset: 0;
+    }
+
+    .back {
+      background: #f3a5b5;
+      border-radius: 8px;
+    }
+
+    .letter {
+      position: absolute;
+      z-index: 1;
+      left: 18px;
+      right: 18px;
+      bottom: 12px;
+      height: 150px;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      border-radius: 6px;
+      background: #fffdf8;
+      color: #a63d58;
+      font-size: 22px;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: transform 650ms ease, opacity 400ms ease;
+    }
+
+    .front {
+      z-index: 2;
+      background: #f7bdc8;
+      clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+      border-radius: 8px;
+    }
+
+    .flap {
+      z-index: 3;
+      background: #ed91a5;
+      clip-path: polygon(0 0, 100% 0, 50% 62%);
+      transform-origin: top;
+      transition: transform 600ms ease;
+    }
+
+    .envelope.open .flap {
+      transform: rotateX(180deg);
+    }
+
+    .envelope.open .letter {
+      opacity: 1;
+      transform: translateY(-45px);
+      transition-delay: 250ms;
+    }
+
+    .envelope:focus-visible {
+      outline: 3px solid #a63d58;
+      outline-offset: 8px;
+      border-radius: 8px;
+    }
+
+    .envelope.open {
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <main class="scene">
+    <p class="hint" id="hint">点一下信封，打开这封信</p>
+
+    <button class="envelope" id="envelope" type="button" aria-describedby="hint">
+      <span class="back"></span>
+      <span class="letter">你的爸爸是李昊轩</span>
+      <span class="front"></span>
+      <span class="flap"></span>
+    </button>
+  </main>
+
+  <script>
+    const envelope = document.getElementById("envelope");
+
+    envelope.addEventListener("click", () => {
+      envelope.classList.add("open");
+      envelope.setAttribute("aria-label", "信已打开：你的爸爸是李昊轩");
+    }, { once: true });
+  </script>
+</body>
+</html>
