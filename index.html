@@ -20,79 +20,109 @@
 
     .scene {
       text-align: center;
+      padding: 40px 20px;
     }
 
     .hint {
-      margin-bottom: 24px;
+      margin-bottom: 30px;
       color: #885e68;
     }
 
     .envelope {
       position: relative;
-      width: 280px;
-      height: 190px;
+      width: 300px;
+      height: 200px;
       padding: 0;
       border: 0;
       background: transparent;
       cursor: pointer;
-      perspective: 800px;
+      overflow: visible;
     }
 
-    .back,
-    .front,
-    .flap {
+    /* 信封底 */
+    .back {
       position: absolute;
       inset: 0;
-    }
-
-    .back {
-      background: #f3a5b5;
+      z-index: 0;
       border-radius: 8px;
+      background: #f3a5b5;
     }
 
+    /* 信纸 */
     .letter {
       position: absolute;
-      z-index: 1;
-      left: 18px;
-      right: 18px;
+      left: 25px;
+      right: 25px;
       bottom: 12px;
-      height: 150px;
+      z-index: 2;
+      height: 175px;
       display: grid;
       place-items: center;
-      padding: 16px;
-      border-radius: 6px;
+      padding: 20px;
+      border-radius: 8px;
       background: #fffdf8;
       color: #a63d58;
       font-size: 22px;
       font-weight: 700;
+      box-shadow: 0 8px 20px rgb(120 50 70 / 18%);
       opacity: 0;
-      transform: translateY(20px);
-      transition: transform 650ms ease, opacity 400ms ease;
+      transform: translateY(100px) scale(0.85);
+      transition: opacity 200ms ease;
     }
 
+    /* 信封前面的折角 */
     .front {
-      z-index: 2;
-      background: #f7bdc8;
-      clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+      position: absolute;
+      inset: 0;
+      z-index: 3;
       border-radius: 8px;
+      background: #f7bdc8;
+      clip-path: polygon(
+        0 0,
+        50% 55%,
+        100% 0,
+        100% 100%,
+        0 100%
+      );
     }
 
+    /* 信封上盖 */
     .flap {
-      z-index: 3;
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      border-radius: 8px;
       background: #ed91a5;
-      clip-path: polygon(0 0, 100% 0, 50% 62%);
+      clip-path: polygon(0 0, 100% 0, 50% 60%);
       transform-origin: top;
-      transition: transform 600ms ease;
+      transition: transform 450ms ease;
+    }
+
+    /* 打开后让信纸弹出 */
+    .envelope.open .letter {
+      z-index: 5;
+      opacity: 1;
+      animation: letter-pop 900ms cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
     }
 
     .envelope.open .flap {
+      z-index: 1;
       transform: rotateX(180deg);
     }
 
-    .envelope.open .letter {
-      opacity: 1;
-      transform: translateY(-45px);
-      transition-delay: 250ms;
+    @keyframes letter-pop {
+      0% {
+        transform: translateY(100px) scale(0.85);
+      }
+      60% {
+        transform: translateY(-115px) scale(1.04);
+      }
+      80% {
+        transform: translateY(-88px) scale(0.99);
+      }
+      100% {
+        transform: translateY(-98px) scale(1);
+      }
     }
 
     .envelope:focus-visible {
@@ -104,13 +134,28 @@
     .envelope.open {
       cursor: default;
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 <body>
   <main class="scene">
     <p class="hint" id="hint">点一下信封，打开这封信</p>
 
-    <button class="envelope" id="envelope" type="button" aria-describedby="hint">
+    <button
+      class="envelope"
+      id="envelope"
+      type="button"
+      aria-label="打开信封"
+      aria-describedby="hint"
+    >
       <span class="back"></span>
       <span class="letter">你的爸爸是李昊轩</span>
       <span class="front"></span>
